@@ -98,3 +98,8 @@ void Camera::Inputs(GLFWwindow* window)
 		firstClick = true;
 	}
 }
+glm::mat4 Camera::GetViewMatrix()
+{
+	// Return the view matrix
+	return glm::lookAt(Position, Position + Orientation, Up);
+}

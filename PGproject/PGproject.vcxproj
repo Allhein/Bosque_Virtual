@@ -143,29 +143,26 @@
     <ClCompile Include="Dependencies\glad\src\glad.c" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="objloader.cpp" />
     <ClCompile Include="shaderClass.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camara.h" />
     <ClInclude Include="EBO.h" />
-    <ClInclude Include="objloader.hpp" />
     <ClInclude Include="shaderClass.h" />
+    <ClInclude Include="Skybox.h" />
+    <ClInclude Include="stb.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="alpha.png" />
     <Image Include="brickwall.jpg" />
-    <Image Include="dog.jpg" />
     <Image Include="pngwin.png" />
     <Image Include="textures\Tolet.png" />
   </ItemGroup>
@@ -174,6 +171,8 @@
     <None Include="default.vert" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
