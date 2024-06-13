@@ -18,9 +18,9 @@ A virtual tour that will take you through the forest to feel one with nature.
 
 ## Authors
 
-- **Engel Calderón**
+- **Engel Calderón** -[engelcalderon](https://github.com/engelcaldero28)
 
-* **Marcelo Flores**
+* **Marcelo Flores** _  [marceloflores](https://github.com/Allhein)
 
-* **Kenneth Sevilla**
+* **Kenneth Sevilla** - [kennethsevilla](https://github.com/Kenneth-Sevilla)
 
