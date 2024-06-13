@@ -1,5 +1,0 @@
-﻿Lab#3.obj : error LNK2005: ya se definió main en Lab#2.obj
-glew32s.lib(glew.obj) : warning LNK4099: no se encontró PDB '' con 'glew32s.lib(glew.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-LINK : warning LNK4098: la biblioteca predeterminada'LIBCMT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
-LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
-C:\Users\mf226\Downloads\PGproject\x64\Debug\PGproject.exe : fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneamente

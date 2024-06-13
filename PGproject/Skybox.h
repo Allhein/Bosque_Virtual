@@ -1,19 +1,23 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
 #include <vector>
 #include <string>
-#include "ShaderClass.h"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include "shader_m.h"
 
 class Skybox {
 public:
-    GLuint textureID;
-    GLuint VAO, VBO;
-
     Skybox(const std::vector<std::string>& faces);
-    void Draw(const Shader& shader, const glm::mat4& view, const glm::mat4& projection);
+    void Draw(Shader& shader, const glm::mat4& view, const glm::mat4& projection);
+
+private:
+    unsigned int loadCubemap(const std::vector<std::string>& faces);
+    void setupSkybox();
+
+    unsigned int cubemapTexture;
+    unsigned int skyboxVAO, skyboxVBO;
 };
 
 #endif

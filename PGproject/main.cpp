@@ -1,162 +1,27 @@
-#include <iostream>
-#include <vector>
-#include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include "Texture.h"
-#include "shaderClass.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "Camara.h"
+
+#include "shader_m.h"
+#include "camera.h"
+#include "model.h"
 #include "Skybox.h"
 
+#include <iostream>
 
-// Estructura de Material
-struct Material {
-    glm::vec3 ambient = glm::vec3(1.0f);
-    glm::vec3 diffuse = glm::vec3(1.0f);
-    glm::vec3 specular = glm::vec3(1.0f);
-    float shininess = 32.0f;
-    GLuint diffuseTexture = 0;
-    GLuint specularTexture = 0;
-};
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow* window);
 
-// Prototipos de función
-void processMesh(aiMesh* mesh, const aiScene* scene, std::vector<float>& vertices, std::vector<unsigned int>& indices, std::vector<Material>& materials);
-void processNode(aiNode* node, const aiScene* scene, std::vector<float>& vertices, std::vector<unsigned int>& indices, std::vector<Material>& materials);
-GLuint loadTexture(const char* path);
+// settings
+//const unsigned int SCR_WIDTH = 800;
+//const unsigned int SCR_HEIGHT = 600;
 
-void loadModel(const char* path, std::vector<float>& vertices, std::vector<unsigned int>& indices, std::vector<Material>& materials) {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
-        return;
-    }
 
-    processNode(scene->mRootNode, scene, vertices, indices, materials);
-}
-
-void processNode(aiNode* node, const aiScene* scene, std::vector<float>& vertices, std::vector<unsigned int>& indices, std::vector<Material>& materials) {
-    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        processMesh(mesh, scene, vertices, indices, materials);
-    }
-    for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        processNode(node->mChildren[i], scene, vertices, indices, materials);
-    }
-}
-
-void processMesh(aiMesh* mesh, const aiScene* scene, std::vector<float>& vertices, std::vector<unsigned int>& indices, std::vector<Material>& materials) {
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-        vertices.push_back(mesh->mVertices[i].x);
-        vertices.push_back(mesh->mVertices[i].y);
-        vertices.push_back(mesh->mVertices[i].z);
-
-        if (mesh->mTextureCoords[0]) {
-            vertices.push_back(mesh->mTextureCoords[0][i].x);
-            vertices.push_back(mesh->mTextureCoords[0][i].y);
-        }
-        else {
-            vertices.push_back(0.0f);
-            vertices.push_back(0.0f);
-        }
-
-        if (mesh->mColors[0]) {
-            vertices.push_back(mesh->mColors[0][i].r);
-            vertices.push_back(mesh->mColors[0][i].g);
-            vertices.push_back(mesh->mColors[0][i].b);
-        }
-        else {
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-        }
-
-        vertices.push_back(mesh->mNormals[i].x);
-        vertices.push_back(mesh->mNormals[i].y);
-        vertices.push_back(mesh->mNormals[i].z);
-    }
-
-    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-        aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; ++j) {
-            indices.push_back(face.mIndices[j]);
-        }
-    }
-
-    Material material;
-    if (mesh->mMaterialIndex >= 0) {
-        aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-
-        aiColor3D color;
-        float shininess;
-
-        mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
-        material.ambient = glm::vec3(color.r, color.g, color.b);
-
-        mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-        material.diffuse = glm::vec3(color.r, color.g, color.b);
-
-        mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
-        material.specular = glm::vec3(color.r, color.g, color.b);
-
-        mat->Get(AI_MATKEY_SHININESS, shininess);
-        material.shininess = shininess;
-
-        if (mat->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-            aiString str;
-            mat->GetTexture(aiTextureType_DIFFUSE, 0, &str);
-            material.diffuseTexture = loadTexture(str.C_Str());
-        }
-
-        if (mat->GetTextureCount(aiTextureType_SPECULAR) > 0) {
-            aiString str;
-            mat->GetTexture(aiTextureType_SPECULAR, 0, &str);
-            material.specularTexture = loadTexture(str.C_Str());
-        }
-    }
-    materials.push_back(material);
-}
-
-GLuint loadTexture(const char* path) {
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nrComponents;
-    unsigned char* data = stbi_load("Tolet.png", &width, &height, &nrComponents, 0);
-    if (data) {
-        GLenum format = GL_RGB;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else {
-        std::cout << "Failed to load texture: " << path << std::endl;
-    }
-    stbi_image_free(data);
-    return textureID;
-}
 
 void getUserResolution(int& width, int& height) {
     std::cout << "Seleccione la resolución de la ventana:\n";
@@ -198,31 +63,69 @@ void getUserResolution(int& width, int& height) {
         break;
     }
 }
+int width, height;
 
-int main() {
+// camera
+Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
+float lastX = width / 2.0f;
+float lastY = height / 2.0f;
+bool firstMouse = true;
 
-    int width, height;
+// timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+int main()
+{
     getUserResolution(width, height);
 
+    // glfw: initialize and configure
+    // ------------------------------
     glfwInit();
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(width, height, "Forest", NULL, NULL);
-    if (window == NULL) {
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    // glfw window creation
+    // --------------------
+    GLFWwindow* window = glfwCreateWindow(width, height, "Virtual Forest", NULL, NULL);
+    if (window == NULL)
+    {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
-    gladLoadGL();
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glViewport(0, 0, 800, 800);
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
-    Shader shaderProgram("default.vert", "default.frag");
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+   //stbi_set_flip_vertically_on_load(true);
+
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+
+    // build and compile shaders
+    // -------------------------
+    Shader shaderProgram("model_loading.vert", "model_loading.frag");
+
     Shader skyboxShader("skybox.vert", "skybox.frag");
 
     std::vector<std::string> faces{
@@ -234,91 +137,118 @@ int main() {
         "skybox/miramar_lf.jpg"
     };
 
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Material> materials;
-    loadModel("obj/source/BOG.obj", vertices, indices, materials);
-
-    VAO VAO1;
-    VAO1.Bind();
-
-    VBO VBO1(vertices.data(), vertices.size() * sizeof(float));
-    EBO EBO1(indices.data(), indices.size() * sizeof(unsigned int));
-
-    VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
-    VAO1.LinkAttrib(VBO1, 1, 2, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-    VAO1.LinkAttrib(VBO1, 2, 3, GL_FLOAT, 11 * sizeof(float), (void*)(5 * sizeof(float)));
-    VAO1.LinkAttrib(VBO1, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
-
-    VAO1.Unbind();
-    VBO1.Unbind();
-    EBO1.Unbind();
-
-    glEnable(GL_DEPTH_TEST);
-
-    shaderProgram.Activate();
-
-    GLuint modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-    GLuint viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-    GLuint projLoc = glGetUniformLocation(shaderProgram.ID, "projection");
-
-    GLuint diffuseLoc = glGetUniformLocation(shaderProgram.ID, "material.diffuse");
-    GLuint specularLoc = glGetUniformLocation(shaderProgram.ID, "material.specular");
-    GLuint shininessLoc = glGetUniformLocation(shaderProgram.ID, "material.shininess");
-
-    glUniform1i(diffuseLoc, 0);
-    glUniform1i(specularLoc, 1);
-
-    Camera camara(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    // load models
+    // -----------
+    Model modelo("obj/source/BOG.obj");
 
     Skybox skybox(faces);
 
-    while (!glfwWindowShouldClose(window)) {
 
-        float currentFrame = glfwGetTime();
-        static float lastFrame = 0.0f;
-        float deltaTime = currentFrame - lastFrame;
+    // draw in wireframe
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // render loop
+    // -----------
+    while (!glfwWindowShouldClose(window))
+    {
+        // per-frame time logic
+        // --------------------
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        camara.Inputs(window);
+        // input
+        // -----
+        processInput(window);
 
+        // render
+        // ------
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shaderProgram.Activate();
-        camara.updateMatrix(45.0f, 0.1f, 100.0f);
-        camara.Matrix(shaderProgram, "camMatrix");
+        // don't forget to enable shader before setting uniforms
+        shaderProgram.use();
 
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        shaderProgram.setMat4("projection", projection);
+        shaderProgram.setMat4("view", view);
+
+        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
-        glm::mat4 view = camara.GetViewMatrix();
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        shaderProgram.setMat4("model", model);
+        modelo.Draw(shaderProgram);
 
-        for (const auto& material : materials) {
-            glUniform1f(shininessLoc, material.shininess);
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.diffuseTexture);
-            glUniform1i(diffuseLoc, 0);
-
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.specularTexture);
-            glUniform1i(specularLoc, 1);
-
-            VAO1.Bind();
-            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-            VAO1.Unbind();
-        }
+        // draw skybox
         skybox.Draw(skyboxShader, view, projection);
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    VAO1.Delete();
-    VBO1.Delete();
-    EBO1.Delete();
-    shaderProgram.Delete();
-    glfwDestroyWindow(window);
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
+}
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
