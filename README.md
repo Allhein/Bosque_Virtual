@@ -1,9 +1,9 @@
-# Nombre del Proyecto
+## Virtual Forest🌲
 
-## Descripción
-Una breve descripción del proyecto. Este proyecto tiene como objetivo [describir brevemente el propósito y las funcionalidades principales del programa].
+## Description
+This project aims to take a virtual walk in a 3D forest where you can move freely to the limits of it, you can also observe everything in detail.
 
-## Herramientas a Utilizar
+## 
 - Lenguaje de Programación: [especificar el lenguaje, por ejemplo, Python, JavaScript, etc.]
 - Librerías o Frameworks: [especificar las librerías o frameworks, por ejemplo, React, Django, etc.]
 - Base de Datos: [especificar la base de datos, por ejemplo, MySQL, PostgreSQL, etc.]
