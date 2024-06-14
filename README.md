@@ -1,37 +1,30 @@
-## Virtual Forest🌲
+<div align="center">
+<h1 >🌲Virtual Forest 🌲</h1>
+<p ><sup><b>A virtual tour that will take you through the forest to feel one with nature. </b></sup></p>
+</div>
 
-## Description
-This project aims to take a virtual walk in a 3D forest where you can move freely to the limits of it, you can also observe everything in detail.
+## Introduction
 
-## 
-- Lenguaje de Programación: [especificar el lenguaje, por ejemplo, Python, JavaScript, etc.]
-- Librerías o Frameworks: [especificar las librerías o frameworks, por ejemplo, React, Django, etc.]
-- Base de Datos: [especificar la base de datos, por ejemplo, MySQL, PostgreSQL, etc.]
-- Otras herramientas: [especificar cualquier otra herramienta relevante, por ejemplo, Docker, Git, etc.]
+Welcome to the Virtual Forest: A Natural Paradise at Your Fingertips
 
-## Descripción Detallada
-El programa debe realizar las siguientes funciones:
-1. [Funcionalidad 1: Descripción detallada de lo que debe hacer la primera funcionalidad.]
-2. [Funcionalidad 2: Descripción detallada de lo que debe hacer la segunda funcionalidad.]
-3. [Funcionalidad 3: Descripción detallada de lo que debe hacer la tercera funcionalidad.]
+Immerse yourself in the majesty of nature with our innovative Virtual Forest project. Designed to offer you an immersive and educational experience, this digital environment will allow you to explore the beauty and diversity of a forest from the comfort of your own home.
 
-## Autores
-- [Nombre del Autor 1](enlace al perfil de GitHub)
-- [Nombre del Autor 2](enlace al perfil de GitHub)
-- [Nombre del Autor 3](enlace al perfil de GitHub)
+Our Virtual Forest is not only a space for exploration and fun, but also a powerful tool for fostering environmental awareness. Through interaction with this digital environment, we hope to inspire people to value and protect real forests, promoting sustainable practices and respect for nature
 
-## Instalación y Uso
-Instrucciones sobre cómo instalar y ejecutar el programa:
-```bash
-# Clonar el repositorio
-git clone https://github.com/usuario/nombre-del-proyecto.git
+## Built With
+- [C++]
+- [OpenGL]
+  - [GLFW]
+  - [GLAD]
+  - [GLEW]
 
-# Entrar al directorio del proyecto
-cd nombre-del-proyecto
 
-# Instalar dependencias (ejemplo para un proyecto en Python)
-pip install -r requirements.txt
 
-# Ejecutar el programa
-python main.py
+## Authors
+
+- **Engel Calderón** -[engelcalderon](https://github.com/engelcaldero28)
+
+* **Marcelo Flores** _  [marceloflores](https://github.com/Allhein)
+
+* **Kenneth Sevilla** - [kennethsevilla](https://github.com/Kenneth-Sevilla)
 
