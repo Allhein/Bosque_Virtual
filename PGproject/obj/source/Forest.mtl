@@ -1,4 +1,4 @@
-# Blender 3.3.19 MTL File: 'Forest.blend'
+# Blender 4.1.1 MTL File: 'None'
 # www.blender.org
 
 newmtl Floor
@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/grass3.jpg
+map_Kd grass3.jpg
 
 newmtl Green_Elka
 Ns 96.078453
@@ -19,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Vetka_elka.png
+map_Kd Vetka_elka.png
 
 newmtl Green_sosna.001
 Ns 96.078453
@@ -29,7 +29,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Kust_2.png
+map_Kd Kust_2.png
 
 newmtl Kust_1
 Ns 96.078453
@@ -39,7 +39,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Kust_1.jpg
+map_Kd Kust_1.jpg
 
 newmtl Kust_2
 Ns 96.078453
@@ -49,7 +49,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Kust_2.png
+map_Kd Kust_2.png
 
 newmtl Paporotnik
 Ns 96.078453
@@ -59,7 +59,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Paporotnik.png
+map_Kd Paporotnik.png
 
 newmtl Wood_tree.001
 Ns 96.078453
@@ -69,7 +69,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Tree_android.png
+map_Kd Tree_android.png
 
 newmtl Wood_tree.002
 Ns 96.078453
@@ -79,4 +79,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd C:/Users/mf226/Downloads/PGproject/textures/Tree_android.png
+map_Kd Tree_android.png

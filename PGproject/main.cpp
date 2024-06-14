@@ -66,7 +66,7 @@ void getUserResolution(int& width, int& height) {
 int width, height;
 
 // camera
-Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
+Camera camera(glm::vec3(0.2f, 1.4f, 5.5f));
 float lastX = width / 2.0f;
 float lastY = height / 2.0f;
 bool firstMouse = true;
@@ -85,10 +85,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 
     // glfw window creation
     // --------------------
@@ -139,9 +135,16 @@ int main()
 
     // load models
     // -----------
-    Model modelo("obj/source/BOG.obj");
+    Model modelo("obj/source/Forest.obj");
 
     Skybox skybox(faces);
+
+    shaderProgram.use();
+    shaderProgram.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    shaderProgram.setVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f); // Luz ambiental
+    shaderProgram.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f); // Luz difusa
+    shaderProgram.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f); // luz especular
+    shaderProgram.setFloat("material.shininess", 32.0f);
 
 
     // draw in wireframe
