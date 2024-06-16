@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <irrKlang.h>
 
 #include "shader_m.h"
 #include "camera.h"
@@ -75,6 +76,10 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+//audio
+irrklang::ISoundEngine* SoundEngine = irrklang::createIrrKlangDevice();
+//-------
+
 int main()
 {
     getUserResolution(width, height);
@@ -85,6 +90,9 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //pa lo del audio
+    SoundEngine->play2D("sonidos/forest_amb.ogg", true);
+    //----------
 
     // glfw window creation
     // --------------------
@@ -152,10 +160,13 @@ int main()
 
     // render loop
     // -----------
+
+
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
         // --------------------
+
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -255,3 +266,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
+
+
+
