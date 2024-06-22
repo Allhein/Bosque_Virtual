@@ -37,6 +37,12 @@ struct Texture {
     string path;
 };
 
+// Definición de BoundingBox
+struct BoundingBox {
+    glm::vec3 min; // Punto mínimo de la caja de colisión
+    glm::vec3 max; // Punto máximo de la caja de colisión
+};
+
 class Mesh {
 public:
     // mesh Data
@@ -44,16 +50,30 @@ public:
     vector<unsigned int> indices;
     vector<Texture>      textures;
     unsigned int VAO;
+    BoundingBox boundingBox;
+
+    // Transformations
+    glm::vec3 position;
+    glm::vec3 rotationAxis;
+    float rotationAngle;
+    glm::vec3 scale;
 
     // constructor
-    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures,
+        glm::vec3 position = glm::vec3(0.0f), glm::vec3 rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f), float rotationAngle = 0.0f,
+        glm::vec3 scale = glm::vec3(1.0f))
     {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
+        this->position = position;
+        this->rotationAxis = rotationAxis;
+        this->rotationAngle = rotationAngle;
+        this->scale = scale;
 
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
+        this->boundingBox = calculateBoundingBox();
     }
 
     // render the mesh
@@ -92,6 +112,25 @@ public:
 
         // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
+    }
+
+    BoundingBox calculateBoundingBox() const
+    {
+        // Suponiendo que los vértices contienen solo posiciones
+        glm::vec3 minPos = glm::vec3(std::numeric_limits<float>::max());
+        glm::vec3 maxPos = glm::vec3(std::numeric_limits<float>::min());
+
+        for (const auto& vertex : vertices)
+        {
+            minPos = glm::min(minPos, vertex.Position);
+            maxPos = glm::max(maxPos, vertex.Position);
+        }
+
+        BoundingBox box;
+        box.min = minPos;
+        box.max = maxPos;
+
+        return box;
     }
 
 private:
@@ -143,4 +182,5 @@ private:
         glBindVertexArray(0);
     }
 };
+
 #endif

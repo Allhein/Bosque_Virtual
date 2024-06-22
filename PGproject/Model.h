@@ -42,7 +42,17 @@ public:
     void Draw(Shader& shader)
     {
         for (unsigned int i = 0; i < meshes.size(); i++)
+        {
+            // Apply model transformations to the shader
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, meshes[i].position);
+            model = glm::rotate(model, glm::radians(meshes[i].rotationAngle), meshes[i].rotationAxis);
+            model = glm::scale(model, meshes[i].scale);
+            shader.setMat4("model", model);
+
+            // Draw the mesh
             meshes[i].Draw(shader);
+        }
     }
 
 private:
