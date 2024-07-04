@@ -30,6 +30,11 @@ https://youtu.be/HsfYJmHNW78
 
 You can run the main.cpp file in the Visual_Forest-main folder (do not move it out or rename it). The reason is that the required assets and libraries are located in the same folder.
 
+1. Download the project
+2. Create an empty project in Visual Community (C++) This must be created with the solution in the same path
+3. Configure the libraries. In case of an error with a .dll, add it directly where the project's .exe is located
+4. Debug the project
+
 ## How to Use the App
 
 In the menu that will appear to the user we offer 2 options, in the first the user will choose the screen resolution, in the second if desired in a free mode (without collisions) and a normal mode (with collisions)
@@ -43,13 +48,11 @@ After the user selects a mode, the city will be displayed and run according to t
 ## Inspiration about the project
 We were encouraged to create a forest since today not many people dare to go, so we wanted to create this forest so that those people who do not have the opportunity to go to one can be calm at home to enjoy it.
 
-In the future, we plan to add more functionalities, such as the ability to interact with virtual animals and explore different ecosystems, to further enrich the experience.
-
 We hope that this project will inspire users to appreciate and protect natural environments, by giving them an emotional connection to the virtual world.
 
 ### Notes:
 
-- City Tour was developed as part of a university project, therefore, we are not responsible for any kind of loss or damage that may occur.
+- Virtual Forest was developed as part of a university project, therefore, we are not responsible for any kind of loss or damage that may occur.
 
 
 ## Built With
